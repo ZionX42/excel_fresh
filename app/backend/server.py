@@ -17,6 +17,7 @@ from openpyxl import Workbook
 from openpyxl.chart import LineChart, Reference
 from openpyxl.styles import Font, PatternFill, Alignment
 from urllib.parse import urlencode
+from pymongo.errors import ServerSelectionTimeoutError
 
 
 ROOT_DIR = Path(__file__).parent
@@ -121,27 +122,37 @@ async def get_status_checks():
 # -------- Auth (minimal, optional) --------
 @api_router.post("/auth/register")
 async def register(req: RegisterRequest):
-    existing = await db.users.find_one({"email": req.email})
-    if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    user = {
-        "id": str(uuid.uuid4()),
-        "email": req.email,
-        "password_hash": pwd_context.hash(req.password),
-        "created_at": now_iso(),
-    }
-    await db.users.insert_one(user)
-    return {"ok": True}
+    try:
+        existing = await db.users.find_one({"email": req.email})
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        user = {
+            "id": str(uuid.uuid4()),
+            "email": req.email,
+            "password_hash": pwd_context.hash(req.password),
+            "created_at": now_iso(),
+        }
+        await db.users.insert_one(user)
+        return {"ok": True}
+    except ServerSelectionTimeoutError:
+        raise HTTPException(status_code=503, detail="Database unavailable - MongoDB not running")
+    except Exception as e:
+        raise
 
 
 @api_router.post("/auth/login", response_model=LoginResponse)
 async def login(req: LoginRequest):
-    user = await db.users.find_one({"email": req.email})
-    if not user or not pwd_context.verify(req.password, user.get("password_hash", "")):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    payload = {"sub": user["id"], "email": user["email"], "iat": int(datetime.now(timezone.utc).timestamp())}
-    token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALG)
-    return LoginResponse(access_token=token)
+    try:
+        user = await db.users.find_one({"email": req.email})
+        if not user or not pwd_context.verify(req.password, user.get("password_hash", "")):
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+        payload = {"sub": user["id"], "email": user["email"], "iat": int(datetime.now(timezone.utc).timestamp())}
+        token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALG)
+        return LoginResponse(access_token=token)
+    except ServerSelectionTimeoutError:
+        raise HTTPException(status_code=503, detail="Database unavailable - MongoDB not running")
+    except Exception as e:
+        raise
 
 
 # --- OAuth: Login URL helpers (stubs until creds provided) ---
