@@ -345,5 +345,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Built with ❤️ for the future of spreadsheet creation**
 
-*Star ⭐ this repository if you find it useful!
+**Star ⭐ this repository if you find it useful!**
 
