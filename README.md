@@ -91,73 +91,7 @@ excel_fresh/
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- **Node.js** (≥16.0.0)
-- **Python** (≥3.9)
-- **MongoDB** (local or cloud instance)
-- **Git**
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/ZionX42/excel_fresh.git
-cd excel_fresh
-```
-
-### 2. Backend Setup
-
-```bash
-cd app/backend
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Configure environment variables
-cp .env.example .env
-# Edit .env with your MongoDB URL and other settings
-```
-
-**Environment Variables (.env)**:
-```env
-MONGO_URL=mongodb://localhost:27017
-DB_NAME=excelvision_db
-CORS_ORIGINS=*
-JWT_SECRET=your-secret-key-here
-GOOGLE_CLIENT_ID=your-google-client-id
-MICROSOFT_CLIENT_ID=your-microsoft-client-id
-MICROSOFT_TENANT_ID=common
-```
-
-### 3. Frontend Setup
-
-```bash
-cd ../frontend
-
-# Install Node.js dependencies
-npm install
-# or
-yarn install
-
-# Configure environment variables
-echo "REACT_APP_BACKEND_URL=http://localhost:8000" > .env.local
-```
-
-### 4. Start the Development Servers
-
-**Terminal 1 - Backend:**
-```bash
-cd app/backend
-uvicorn server:app --reload --host 0.0.0.0 --port 8000
-```
-
-**Terminal 2 - Frontend:**
-```bash
-cd app/frontend
-npm start
-```
-
-### 5. Access the Application
+### Access the Application
 
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
@@ -411,4 +345,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Built with ❤️ for the future of spreadsheet creation**
 
-*Star ⭐ this repository if you find it useful!*
+*Star ⭐ this repository if you find it useful!
+
