@@ -187,7 +187,7 @@ Monthly Growth Rate: 8.3%
 ## 🎨 User Interface Screenshots
 
 ### Main Dashboard
-![ExcelVision Dashboard](https://github.com/user-attachments/assets/73c0f527-b5c8-47f6-846f-737249431c7f)
+![ExcelVision Dashboard]()
 
 **Features shown:**
 - **Clean, modern interface** with dark theme and rose accent colors
@@ -198,7 +198,7 @@ Monthly Growth Rate: 8.3%
 - **Recent generations section** showing generation history with metadata
 
 ### Authentication Page  
-![ExcelVision Authentication](https://github.com/user-attachments/assets/0af9e4cd-5a25-4a9c-93b9-f06b41045009)
+![ExcelVision Authentication]()
 
 **Features shown:**
 - **Split-screen design** with abstract visual background
