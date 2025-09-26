@@ -297,7 +297,12 @@ async def generate_spreadsheet(req: GenerationRequest):
         filename=filename,
         size_bytes=size_bytes,
     )
-    await db.generations.insert_one(prepare_for_mongo(record.model_dump()))
+    # Try to persist record, but don't fail generation if DB is unavailable
+    try:
+        await db.generations.insert_one(prepare_for_mongo(record.model_dump()))
+    except ServerSelectionTimeoutError:
+        # Log and continue; file streaming should not be blocked by DB
+        logger.warning("MongoDB unavailable during insert of generation record; continuing without persistence")
 
     headers = {
         'Content-Disposition': f'attachment; filename="{filename}"'
@@ -307,12 +312,17 @@ async def generate_spreadsheet(req: GenerationRequest):
 
 @api_router.get("/generations", response_model=List[GenerationRecord])
 async def list_generations():
-    gens = await db.generations.find().sort("created_at", -1).to_list(100)
-    cleaned = []
-    for g in gens:
-        g.pop("_id", None)
-        cleaned.append(GenerationRecord(**g))
-    return cleaned
+    try:
+        gens = await db.generations.find().sort("created_at", -1).to_list(100)
+        cleaned = []
+        for g in gens:
+            g.pop("_id", None)
+            cleaned.append(GenerationRecord(**g))
+        return cleaned
+    except ServerSelectionTimeoutError:
+        # Graceful degradation when DB is offline
+        logger.warning("MongoDB unavailable when listing generations; returning empty list")
+        return []
 
 
 # Include the router in the main app

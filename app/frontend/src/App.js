@@ -15,9 +15,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from ".
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
 import { Separator } from "./components/ui/separator";
 import { Download, LogIn, FileSpreadsheet, Sparkles, Eye, EyeOff, Mail } from "lucide-react";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import { API_BASE as API } from "./config";
 
 function useAuthToken() {
   const [token, setToken] = useState(() => localStorage.getItem("token") || "");

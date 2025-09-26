@@ -1,0 +1,15 @@
+{
+  "name": "excel_fresh-monorepo",
+  "private": true,
+  "scripts": {
+    "install:root": "cd app/frontend && npm install --no-audit --no-fund",
+  "dev:backend": "powershell -NoProfile -Command \"if (Test-Path 'app/backend/.venv/Scripts/python.exe') { & 'app/backend/.venv/Scripts/python.exe' -m uvicorn server:app --app-dir app/backend --host 127.0.0.1 --port 8000 --reload } else { python -m uvicorn server:app --app-dir app/backend --host 127.0.0.1 --port 8000 --reload }\"",
+    "dev:frontend": "cd app/frontend && npm run dev",
+    "dev": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "build:frontend": "cd app/frontend && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3"
+  }
+}
